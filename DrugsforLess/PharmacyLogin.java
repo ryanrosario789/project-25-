@@ -1,4 +1,5 @@
 package DrugsforLess;
+
 import java.util.Scanner;
 
 public class PharmacyLogin {
@@ -45,7 +46,7 @@ public class PharmacyLogin {
 
             switch (choice) {
                 case 1:
-                    System.out.println("Opening Inventory Management...\n");//
+                    System.out.println("Opening Inventory Management...\n");
                     InventoryManager.handleInventory(); // Placeholder
                     break;
                 case 2:
@@ -62,3 +63,4 @@ public class PharmacyLogin {
         } while (choice != 3);
     }
 }
+

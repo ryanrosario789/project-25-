@@ -1,4 +1,5 @@
 package DrugsforLess;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -99,3 +100,4 @@ public class InventoryManager {
         System.out.println("Drug not found in inventory.");
     }
 }
+
