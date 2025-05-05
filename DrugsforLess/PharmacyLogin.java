@@ -1,3 +1,4 @@
+package DrugsforLess;
 import java.util.Scanner;
 
 public class PharmacyLogin {

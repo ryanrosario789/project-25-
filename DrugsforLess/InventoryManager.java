@@ -1,3 +1,4 @@
+package DrugsforLess;
 import java.util.ArrayList;
 import java.util.Scanner;
 
