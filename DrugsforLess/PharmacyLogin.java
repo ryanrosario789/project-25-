@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 public class PharmacyLogin {
 
-    // Dummy credentials (for demo purposes)
     private static final String USERNAME = "admin";
     private static final String PASSWORD = "pharma123";
 
@@ -38,8 +37,7 @@ public class PharmacyLogin {
         do {
             System.out.println("----- Main Menu -----");
             System.out.println("1. Inventory Management");
-            System.out.println("2. View Deliveries");
-            System.out.println("3. Logout");
+            System.out.println("2. Logout");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine(); // Consume newline
@@ -47,20 +45,15 @@ public class PharmacyLogin {
             switch (choice) {
                 case 1:
                     System.out.println("Opening Inventory Management...\n");
-                    InventoryManager.handleInventory(); // Placeholder
+                    InventoryManager.handleInventory();
                     break;
                 case 2:
-                    System.out.println("Viewing Deliveries...\n");
-                    DeliveryManager.viewDeliveries(); // Placeholder
-                    break;
-                case 3:
                     System.out.println("Logging out...");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again.\n");
             }
 
-        } while (choice != 3);
+        } while (choice != 2);
     }
 }
-
