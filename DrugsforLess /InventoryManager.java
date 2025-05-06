@@ -1,6 +1,9 @@
 package DrugsforLess;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -8,32 +11,37 @@ public class InventoryManager {
     static final String FILE_NAME = "inventory.csv";
     static ArrayList<Medicine> inventory = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
+    static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static void handleInventory() {
         loadInventory();
 
         while (true) {
-            System.out.println("\n📋 Pharmacy Inventory System");
+            System.out.println("\n===============================");
+            System.out.println("📋 Pharmacy Inventory System");
+            System.out.println("===============================");
             System.out.println("1. Add Medicine");
             System.out.println("2. View Inventory");
             System.out.println("3. Update Stock");
             System.out.println("4. Search Medicine");
-            System.out.println("5. Save & Return to Main Menu");
-            System.out.print("Select an option: ");
+            System.out.println("5. Delete Medicine");
+            System.out.println("6. Save & Return to Main Menu");
+            System.out.print("Select an option (1–6): ");
 
             try {
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice) {
-                    case 1 -> addMedicine();
+                    1 -> addMedicine();
                     case 2 -> viewInventory();
                     case 3 -> updateStock();
                     case 4 -> searchMedicine();
-                    case 5 -> {
+                    case 5 -> deleteMedicine();
+                    case 6 -> {
                         saveInventory();
                         System.out.println("✅ Inventory saved. Returning to main menu...");
                         return;
                     }
-                    default -> System.out.println("❗ Please enter a number from 1–5.");
+                    default -> System.out.println("❗ Please enter a number from 1–6.");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("❗ Invalid input. Please enter a number.");
@@ -70,7 +78,7 @@ public class InventoryManager {
         }
     }
 
-    // --- Add Medicine ---
+    // --- Add Medicine with Date Validation ---
     static void addMedicine() {
         try {
             System.out.print("Enter medicine name: ");
@@ -86,8 +94,13 @@ public class InventoryManager {
             System.out.print("Enter quantity: ");
             int quantity = Integer.parseInt(scanner.nextLine());
 
-            System.out.print("Enter expiration date (YYYY-MM-DD): ");
-            String expirationDate = scanner.nextLine();
+            String expirationDate;
+            while (true) {
+                System.out.print("Enter expiration date (YYYY-MM-DD): ");
+                expirationDate = scanner.nextLine();
+                if (isValidFutureDate(expirationDate)) break;
+                else System.out.println("❗ Invalid or past date. Try again.");
+            }
 
             System.out.print("Enter price: ");
             double price = Double.parseDouble(scanner.nextLine());
@@ -105,7 +118,7 @@ public class InventoryManager {
             System.out.println("📦 Inventory is currently empty.");
             return;
         }
-        System.out.println("\nCurrent Inventory:");
+        System.out.println("\n--- Current Inventory ---");
         for (Medicine m : inventory) {
             System.out.println("- " + m);
         }
@@ -122,7 +135,7 @@ public class InventoryManager {
                     int addQty = Integer.parseInt(scanner.nextLine());
                     m.quantity += addQty;
                     System.out.println("✅ Stock updated.");
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatExceptio e) {
                     System.out.println("❗ Invalid quantity.");
                 }
                 return;
@@ -138,12 +151,44 @@ public class InventoryManager {
         boolean found = false;
         for (Medicine m : inventory) {
             if (m.name.equalsIgnoreCase(name)) {
-                System.out.println("🔍 Found: " + m);
+                System.out.println("🔍 Found " + m);
                 found = true;
             }
         }
         if (!found) {
             System.out.println("❌ Medicine not found.");
+        }
+    }
+
+    // --- Delete Medicine ---
+    static void deleteMedicine() {
+        System.out.print("Enter medicine name to delete: ");
+        String name = scanner.nextLine();
+
+        for (int i = 0; i < inventory.size(); i++) {
+            if (inventory.get(i).name.equalsIgnoreCase(name)) {
+                System.out.print("⚠️ Are you sure you want to delete '" + name + "'? (yes/no): ");
+                String confirm = scanner.nextLine();
+                if (confirm.equalsIgnoreCase("yes")) {
+                    inventory.remove(i);
+                    System.out.println("🗑️ Medicine deleted.");
+                } else {
+                    System.out.println("❎ Deletion cancelled.");
+                }
+                return;
+            }
+        }
+
+        System.out.println("❌ Medicine not found.");
+    }
+
+    // --- Validate Date Format and Future Date ---
+    static boolean isValidFutureDate(String dateStr) {
+        try {
+            LocalDate date = LocalDate.parse(dateStr, DATE_FORMAT);
+            return !date.isBefore(LocalDate.now());
+        } catch (DateTimeParseException e) {
+            return false;
         }
     }
 
@@ -160,8 +205,8 @@ public class InventoryManager {
 
     // --- Load Inventory from CSV ---
     static void loadInventory() {
-        inventory.clear(); // Avoid duplication if called multiple times
-        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
+        inventory.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME)) {
             String line;
             while ((line = reader.readLine()) != null) {
                 inventory.add(Medicine.fromCSV(line));
