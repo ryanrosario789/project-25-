@@ -9,7 +9,7 @@ public class PharmacyLogin {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        
+
         System.out.println("=== Welcome to Drugs for Less Pharmacy ===");
         System.out.print("Enter username: ");
         String inputUsername = scanner.nextLine();
@@ -24,7 +24,7 @@ public class PharmacyLogin {
             System.out.println("Invalid credentials. Access denied.");
         }
 
-        scanner.close();
+        scanner.close(); // Optional: InventoryManager uses its own static scanner
     }
 
     private static boolean authenticate(String username, String password) {
@@ -57,3 +57,4 @@ public class PharmacyLogin {
         } while (choice != 2);
     }
 }
+

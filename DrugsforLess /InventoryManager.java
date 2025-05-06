@@ -1,13 +1,15 @@
+package DrugsforLess;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Inventory {
+public class InventoryManager {
     static final String FILE_NAME = "inventory.csv";
     static ArrayList<Medicine> inventory = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
 
-    public static void main(String[] args) {
+    public static void handleInventory() {
         loadInventory();
 
         while (true) {
@@ -16,7 +18,7 @@ public class Inventory {
             System.out.println("2. View Inventory");
             System.out.println("3. Update Stock");
             System.out.println("4. Search Medicine");
-            System.out.println("5. Save & Exit");
+            System.out.println("5. Save & Return to Main Menu");
             System.out.print("Select an option: ");
 
             try {
@@ -28,7 +30,7 @@ public class Inventory {
                     case 4 -> searchMedicine();
                     case 5 -> {
                         saveInventory();
-                        System.out.println("✅ Inventory saved. Exiting...");
+                        System.out.println("✅ Inventory saved. Returning to main menu...");
                         return;
                     }
                     default -> System.out.println("❗ Please enter a number from 1–5.");
@@ -63,7 +65,8 @@ public class Inventory {
         }
 
         public String toString() {
-            return String.format("Name: %s | Quantity: %d | Expires: %s | Price: $%.2f", name, quantity, expirationDate, price);
+            return String.format("Name: %s | Quantity: %d | Expires: %s | Price: $%.2f",
+                    name, quantity, expirationDate, price);
         }
     }
 
@@ -72,6 +75,13 @@ public class Inventory {
         try {
             System.out.print("Enter medicine name: ");
             String name = scanner.nextLine();
+
+            for (Medicine m : inventory) {
+                if (m.name.equalsIgnoreCase(name)) {
+                    System.out.println("⚠️ Medicine already exists. Use 'Update Stock' instead.");
+                    return;
+                }
+            }
 
             System.out.print("Enter quantity: ");
             int quantity = Integer.parseInt(scanner.nextLine());
@@ -150,6 +160,7 @@ public class Inventory {
 
     // --- Load Inventory from CSV ---
     static void loadInventory() {
+        inventory.clear(); // Avoid duplication if called multiple times
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -162,4 +173,3 @@ public class Inventory {
         }
     }
 }
-
