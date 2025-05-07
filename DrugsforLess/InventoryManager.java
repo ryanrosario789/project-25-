@@ -63,6 +63,7 @@ public class InventoryManager {
             return new Medicine(parts[0], Integer.parseInt(parts[1]), parts[2], Double.parseDouble(parts[3]));
         }
 
+        @SuppressWarnings("override")
         public String toString() {
             return String.format("Name: %s | Quantity: %d | Expires: %s | Price: $%.2f", name, quantity, expirationDate, price);
         }
