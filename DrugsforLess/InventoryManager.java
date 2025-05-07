@@ -13,7 +13,7 @@ public class InventoryManager {
         loadInventory();
 
         while (true) {
-            System.out.println("\n Pharmacy Inventory System");
+            System.out.println("\n📋 Pharmacy Inventory System");
             System.out.println("1. Add Medicine");
             System.out.println("2. View Inventory");
             System.out.println("3. Update Stock");
@@ -30,13 +30,13 @@ public class InventoryManager {
                     case 4 -> searchMedicine();
                     case 5 -> {
                         saveInventory();
-                        System.out.println(" Inventory saved. Returning to main menu...");
+                        System.out.println("✅ Inventory saved. Returning to main menu...");
                         return;
                     }
-                    default -> System.out.println(" Please enter a number from 1–5.");
+                    default -> System.out.println("❗ Please enter a number from 1–5.");
                 }
             } catch (NumberFormatException e) {
-                System.out.println(" Invalid input. Please enter a number.");
+                System.out.println("❗ Invalid input. Please enter a number.");
             }
         }
     }
@@ -63,7 +63,6 @@ public class InventoryManager {
             return new Medicine(parts[0], Integer.parseInt(parts[1]), parts[2], Double.parseDouble(parts[3]));
         }
 
-        @SuppressWarnings("override")
         public String toString() {
             return String.format("Name: %s | Quantity: %d | Expires: %s | Price: $%.2f", name, quantity, expirationDate, price);
         }
@@ -84,15 +83,15 @@ public class InventoryManager {
             double price = Double.parseDouble(scanner.nextLine());
 
             inventory.add(new Medicine(name, quantity, expirationDate, price));
-            System.out.println(" Medicine added successfully.");
+            System.out.println("✅ Medicine added successfully.");
         } catch (NumberFormatException e) {
-            System.out.println(" Invalid number forma. Try again.");
+            System.out.println("❗ Invalid number format. Try again.");
         }
     }
 
     static void viewInventory() {
         if (inventory.isEmpty()) {
-            System.out.println(" Inventory is currently empty.");
+            System.out.println("📦 Inventory is currently empty.");
             return;
         }
         System.out.println("\nCurrent Inventory:");
@@ -110,14 +109,14 @@ public class InventoryManager {
                     System.out.print("Enter quantity to add: ");
                     int addQty = Integer.parseInt(scanner.nextLine());
                     m.quantity += addQty;
-                    System.out.println(" Stock updated.");
+                    System.out.println("✅ Stock updated.");
                 } catch (NumberFormatException e) {
-                    System.out.println(" Invalid quantity.");
+                    System.out.println("❗ Invalid quantity.");
                 }
                 return;
             }
         }
-        System.out.println(" Medicine not found.");
+        System.out.println("❌ Medicine not found.");
     }
 
     static void searchMedicine() {
@@ -131,7 +130,7 @@ public class InventoryManager {
             }
         }
         if (!found) {
-            System.out.println(" Medicine not found.");
+            System.out.println("❌ Medicine not found.");
         }
     }
 
@@ -141,7 +140,7 @@ public class InventoryManager {
                 writer.println(m.toCSV());
             }
         } catch (IOException e) {
-            System.out.println(" Error saving inventory: " + e.getMessage());
+            System.out.println("❗ Error saving inventory: " + e.getMessage());
         }
     }
 
@@ -152,9 +151,10 @@ public class InventoryManager {
                 inventory.add(Medicine.fromCSV(line));
             }
         } catch (FileNotFoundException e) {
-            System.out.println(" No saved inventory found. Starting fresh.");
+            System.out.println("📁 No saved inventory found. Starting fresh.");
         } catch (IOException e) {
-            System.out.println(" Error reading inventory: " + e.getMessage());
+            System.out.println("❗ Error reading inventory: " + e.getMessage());
         }
     }
 }
+
