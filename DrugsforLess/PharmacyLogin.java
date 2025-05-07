@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 public class PharmacyLogin {
 
+    @SuppressWarnings({"ConvertToTryWithResources", "UseSpecificCatch"})
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         String loggedInUser = null;
