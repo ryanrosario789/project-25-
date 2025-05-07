@@ -7,7 +7,6 @@ public class UserManager {
     private static final String USER_FILE = "users.csv";
     private static final Map<String, String> users = new HashMap<>();
 
-    // Load users from file when class is first used
     static {
         loadUsers();
     }

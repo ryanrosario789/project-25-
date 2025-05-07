@@ -9,7 +9,6 @@ public class InventoryManager {
     static ArrayList<Medicine> inventory = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
 
-    // Call this from PharmacyLogin with the logged-in username
     public static void handleInventory(String username) {
         loadInventory();
 
@@ -25,7 +24,7 @@ public class InventoryManager {
             try {
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice) {
-                    case 1 -> addMedicine(username); // Pass the logged-in username
+                    case 1 -> addMedicine(username); 
                     case 2 -> viewInventory();
                     case 3 -> updateStock();
                     case 4 -> searchMedicine();
@@ -42,7 +41,6 @@ public class InventoryManager {
         }
     }
 
-    // --- Medicine Class ---
     static class Medicine {
         String name;
         int quantity;
@@ -74,7 +72,6 @@ public class InventoryManager {
         }
     }
 
-    // --- Add Medicine ---
     static void addMedicine(String username) {
         try {
             System.out.print("Enter medicine name: ");
@@ -96,7 +93,6 @@ public class InventoryManager {
         }
     }
 
-    // --- View All Medicines ---
     static void viewInventory() {
         if (inventory.isEmpty()) {
             System.out.println("📦 Inventory is currently empty.");
@@ -108,7 +104,6 @@ public class InventoryManager {
         }
     }
 
-    // --- Update Stock ---
     static void updateStock() {
         System.out.print("Enter medicine name to update: ");
         String name = scanner.nextLine();
@@ -128,7 +123,6 @@ public class InventoryManager {
         System.out.println("❌ Medicine not found.");
     }
 
-    // --- Search for Medicine ---
     static void searchMedicine() {
         System.out.print("Enter medicine name to search: ");
         String name = scanner.nextLine();
@@ -144,7 +138,6 @@ public class InventoryManager {
         }
     }
 
-    // --- Save Inventory to CSV ---
     static void saveInventory() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_NAME))) {
             for (Medicine m : inventory) {
@@ -155,7 +148,7 @@ public class InventoryManager {
         }
     }
 
-    // --- Load Inventory from CSV ---
+
     static void loadInventory() {
         inventory.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
