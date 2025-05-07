@@ -1,5 +1,6 @@
 package DrugsforLess;
 
+import java.io.Console;
 import java.util.Scanner;
 
 public class PharmacyLogin {
@@ -22,7 +23,7 @@ public class PharmacyLogin {
                     String username = scanner.nextLine();
 
                     System.out.print("Enter password: ");
-                    String password = scanner.nextLine();
+                    String password = readPasswordMasked(scanner);
 
                     if (UserManager.authenticate(username, password)) {
                         System.out.println("\n✅ Login successful!\n");
@@ -36,7 +37,7 @@ public class PharmacyLogin {
                     String newUser = scanner.nextLine();
 
                     System.out.print("Choose a password: ");
-                    String newPass = scanner.nextLine();
+                    String newPass = readPasswordMasked(scanner);
 
                     try {
                         if (UserManager.registerUser(newUser, newPass)) {
@@ -77,5 +78,18 @@ public class PharmacyLogin {
                 default -> System.out.println("Invalid choice. Please try again.");
             }
         } while (choice != 2);
+    }
+
+    // 🔐 Password masking support
+    private static String readPasswordMasked(Scanner fallbackScanner) {
+        Console console = System.console();
+        if (console != null) {
+            char[] passwordChars = console.readPassword();
+            return new String(passwordChars);
+        } else {
+            // Fallback for IDEs (e.g., VS Code)
+            System.out.print("(⚠️ visible input in IDE): ");
+            return fallbackScanner.nextLine();
+        }
     }
 }
