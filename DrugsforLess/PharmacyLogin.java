@@ -20,7 +20,7 @@ public class PharmacyLogin {
 
         if (authenticate(inputUsername, inputPassword)) {
             System.out.println("\nLogin successful!\n");
-            displayMenu(scanner);
+            displayMenu(scanner, inputUsername);  // ✅ Pass username here
         } else {
             System.out.println("Invalid credentials. Access denied.");
         }
@@ -32,7 +32,7 @@ public class PharmacyLogin {
         return USERNAME.equals(username) && PASSWORD.equals(password);
     }
 
-    private static void displayMenu(Scanner scanner) {
+    private static void displayMenu(Scanner scanner, String loggedInUser) {
         int choice;
 
         do {
@@ -46,7 +46,7 @@ public class PharmacyLogin {
             switch (choice) {
                 case 1 -> {
                     System.out.println("Opening Inventory Management...\n");
-                    InventoryManager.handleInventory();
+                    InventoryManager.handleInventory(loggedInUser);  // ✅ Fix: pass the username
                 }
                 case 2 -> System.out.println("Logging out...");
                 default -> System.out.println("Invalid choice. Please try again.\n");

@@ -9,7 +9,8 @@ public class InventoryManager {
     static ArrayList<Medicine> inventory = new ArrayList<>();
     static Scanner scanner = new Scanner(System.in);
 
-    public static void handleInventory() {
+    // Call this from PharmacyLogin with the logged-in username
+    public static void handleInventory(String username) {
         loadInventory();
 
         while (true) {
@@ -24,13 +25,13 @@ public class InventoryManager {
             try {
                 int choice = Integer.parseInt(scanner.nextLine());
                 switch (choice) {
-                    case 1 -> addMedicine();
+                    case 1 -> addMedicine(username); // Pass the logged-in username
                     case 2 -> viewInventory();
                     case 3 -> updateStock();
                     case 4 -> searchMedicine();
                     case 5 -> {
                         saveInventory();
-                        System.out.println("✅ Inventory saved. Returning to main menu...");
+                        System.out.println("✅ Inventory saved. Exiting...");
                         return;
                     }
                     default -> System.out.println("❗ Please enter a number from 1–5.");
@@ -41,35 +42,40 @@ public class InventoryManager {
         }
     }
 
+    // --- Medicine Class ---
     static class Medicine {
         String name;
         int quantity;
         String expirationDate;
         double price;
+        String addedBy; // NEW
 
-        public Medicine(String name, int quantity, String expirationDate, double price) {
+        public Medicine(String name, int quantity, String expirationDate, double price, String addedBy) {
             this.name = name;
             this.quantity = quantity;
             this.expirationDate = expirationDate;
             this.price = price;
+            this.addedBy = addedBy;
         }
 
         public String toCSV() {
-            return name + "," + quantity + "," + expirationDate + "," + price;
+            return name + "," + quantity + "," + expirationDate + "," + price + "," + addedBy;
         }
 
         public static Medicine fromCSV(String line) {
             String[] parts = line.split(",");
-            return new Medicine(parts[0], Integer.parseInt(parts[1]), parts[2], Double.parseDouble(parts[3]));
+            return new Medicine(parts[0], Integer.parseInt(parts[1]), parts[2], Double.parseDouble(parts[3]), parts[4]);
         }
 
         @SuppressWarnings("override")
         public String toString() {
-            return String.format("Name: %s | Quantity: %d | Expires: %s | Price: $%.2f", name, quantity, expirationDate, price);
+            return String.format("Name: %s | Quantity: %d | Expires: %s | Price: $%.2f | Added By: %s",
+                    name, quantity, expirationDate, price, addedBy);
         }
     }
 
-    static void addMedicine() {
+    // --- Add Medicine ---
+    static void addMedicine(String username) {
         try {
             System.out.print("Enter medicine name: ");
             String name = scanner.nextLine();
@@ -83,13 +89,14 @@ public class InventoryManager {
             System.out.print("Enter price: ");
             double price = Double.parseDouble(scanner.nextLine());
 
-            inventory.add(new Medicine(name, quantity, expirationDate, price));
-            System.out.println("✅ Medicine added successfully.");
+            inventory.add(new Medicine(name, quantity, expirationDate, price, username));
+            System.out.println("✅ Medicine added successfully by " + username);
         } catch (NumberFormatException e) {
             System.out.println("❗ Invalid number format. Try again.");
         }
     }
 
+    // --- View All Medicines ---
     static void viewInventory() {
         if (inventory.isEmpty()) {
             System.out.println("📦 Inventory is currently empty.");
@@ -101,6 +108,7 @@ public class InventoryManager {
         }
     }
 
+    // --- Update Stock ---
     static void updateStock() {
         System.out.print("Enter medicine name to update: ");
         String name = scanner.nextLine();
@@ -120,6 +128,7 @@ public class InventoryManager {
         System.out.println("❌ Medicine not found.");
     }
 
+    // --- Search for Medicine ---
     static void searchMedicine() {
         System.out.print("Enter medicine name to search: ");
         String name = scanner.nextLine();
@@ -135,6 +144,7 @@ public class InventoryManager {
         }
     }
 
+    // --- Save Inventory to CSV ---
     static void saveInventory() {
         try (PrintWriter writer = new PrintWriter(new FileWriter(FILE_NAME))) {
             for (Medicine m : inventory) {
@@ -145,7 +155,9 @@ public class InventoryManager {
         }
     }
 
+    // --- Load Inventory from CSV ---
     static void loadInventory() {
+        inventory.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(FILE_NAME))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -158,4 +170,3 @@ public class InventoryManager {
         }
     }
 }
-
